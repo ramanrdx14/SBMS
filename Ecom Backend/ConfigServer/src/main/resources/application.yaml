@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: ConfigServer
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/ramanrdx14/application_props_ms.git
+          clone-on-start: true
+
+server:
+  port: 8787
