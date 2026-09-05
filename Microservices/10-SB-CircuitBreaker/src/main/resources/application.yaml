@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: 10-SB-CircuitBreaker
+
+server:
+  port: 8787
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      sampleService:
+        failureRateThreshold: 50
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3

@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: 12-SB-BasicHttpSecurityConsumer
+
+server:
+  port: 7777
