@@ -1,0 +1,1006 @@
+
+=================
+Spring Data JPA
+=================
+
+=> To develop persistence layer  
+
+=> Data JPA supports ORM features
+
+ORM - Object Relational Mapping
+
+=> Using ORM we can represent our data in the form objects.
+
+		- save record using object
+
+		- update record using object
+
+		- delete record using object
+
+		- retrieve records in the form of objects
+
+=> One object represents one row in db table.
+
+Note: We need to map our java class to database table.
+
+=> The java class which is mapped to db table is called as Entity class
+
+=> We will use below annotations in entity class
+
+@Entity : Represent java class as Entity class (mandatory)
+
+@Table : Map java class name to db table name (optional)
+
+@Id : To represent Primary Column mapped variable (mandatory)
+
+@Column : To map entity class variable to db table column (optional)
+
+==========
+DB Setup
+==========
+
+DB Server : MySQL
+
+DB Client : MySQL Workbench
+
+#### MySQL DB Setup : https://youtu.be/EsAIXPIsyQg?si=xmsmlgmFyZFiqu8l
+
+=> Create DB connection in workbench and execute below queries to create database.
+
+show databases;
+create database sbms36;
+use sbms36;
+show tables;
+
+==================================
+Data JPA Application development
+==================================
+
+1) Create boot app with below dependencies
+
+			a) data-jpa starter
+			b) mysql driver
+
+2) Configure datasource properties in application.properties file
+
+3) Create Entity class and map with db table
+
+4) Create Repository interface by extending jpa repository
+
+				a) CrudRepository
+				b) JpaRepository   (more features)
+
+5) Get repository bean obj and test repository methods using start class.
+
+
+-------------------------------------------------------------------------
+
+spring.datasource.username=root
+spring.datasource.password=ashokit@123
+spring.datasource.url=jdbc:mysql://localhost:3306/sbms36
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+--------------------------------------------------------------------------
+@Entity
+public class Book {
+
+	@Id
+	private Integer bookId;
+	private String bookName;
+	private Double bookPrice;
+
+	// setters & getters
+
+}
+-------------------------------------------------------------------
+public interface BookRepository extends CrudRepository<Book, Integer> {
+
+}
+-------------------------------------------------------------------
+
+@SpringBootApplication
+public class Application {
+
+	public static void main(String[] args) {
+		ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
+
+		BookRepository bookRepo = context.getBean(BookRepository.class);
+
+		Book b = new Book();
+		b.setBookId(103);
+		b.setBookName("DevOps");
+		b.setBookPrice(5600.50);
+		
+		bookRepo.save(b); // UPSERT
+
+	}
+
+}
+
+-------------------------------------------------------------------
+
+Data Jpa with Oracle DB : https://youtu.be/ZGKHCJsp4hg?si=r3Cx7Sz8y06taBBF
+
+-------------------------------------------------------------------
+
+========================
+CrudRepository methods
+========================
+
+save (T obj) :  UPSERT operation (update + insert)
+
+saveAll(Iterable objs) : UPSERT Operation
+
+findById(ID) : Retrieve record based on PK column value
+
+findAllById(Iterable ids) : retrieve records using multiple ids
+
+findAll ( ) : Retrieve all records from table
+
+existsById(ID id) : To check presense of record
+
+count () : To get total no.of records
+
+deleteById (Id id) : delete record using pk column value
+
+deleteAllById(Iterable ids) : delete multiple records using ids
+
+delete(T obj) : Delete record using entity obj
+
+deleteAll(Iterable objs) : delete records using multiple entities
+
+deleteAll ( ) : truncate table (delete all records)
+
+-------------------------------------------------------------------------
+@Service
+public class EmployeeService {
+
+	private EmployeeRepo empRepo;
+
+	public EmployeeService(EmployeeRepo empRepo) {
+		this.empRepo = empRepo;
+	}
+	
+	public void getAllEmps() {
+		Iterable<Employee> findAll = empRepo.findAll();
+		findAll.forEach(System.out::println);
+	}
+	
+	
+	public void getEmps() {
+		List<Integer> empIds = Arrays.asList(102, 103);
+		Iterable<Employee> itr = empRepo.findAllById(empIds);
+		itr.forEach(System.out::println);
+	}
+
+	public void getEmp() {
+		Optional<Employee> findById = empRepo.findById(101);
+		if (findById.isPresent()) {
+			Employee employee = findById.get();
+			System.out.println(employee);
+		}
+	}
+
+	public void saveEmployee() {
+		Employee emp = new Employee();
+
+		emp.setEmpId(101);
+		emp.setEmpName("Charles");
+		emp.setEmpGender("Male");
+		emp.setEmpDept("Sales");
+		emp.setEmpSalary(18000.00);
+
+		empRepo.save(emp);
+	}
+
+	public void saveMultipleEmployees() {
+
+		Employee emp1 = new Employee();
+		emp1.setEmpId(102);
+		emp1.setEmpName("Kathy");
+		emp1.setEmpGender("Fe-Male");
+		emp1.setEmpDept("Sales");
+		emp1.setEmpSalary(19000.00);
+
+		Employee emp2 = new Employee();
+		emp2.setEmpId(103);
+		emp2.setEmpName("Nick");
+		emp2.setEmpGender("Male");
+		emp2.setEmpDept("Admin");
+		emp2.setEmpSalary(29000.00);
+
+		List<Employee> empsList = Arrays.asList(emp1, emp2);
+
+		empRepo.saveAll(empsList);
+
+	}
+}
+
+
+================
+findBy Methods
+================
+
+
+findById ( ) - pk
+
+findAllById( ) - pks
+
+findAll ( ) - all records
+
+================================================================
+Q) How to retrieve records based on non-primary column values ?
+================================================================
+
+
+=> Using findBy methods we can retrieve data from table
+
+=> When we write findBy methods, jpa will construct query based on method name.
+
+=> Method name will play very important role
+
+
+	Syntax :  findByXXX(params)
+
+
+				findByEmpDept
+
+
+1) Using Pre-defined methods (CRUD)
+
+2) findByXXX ( ) methods (only select)	
+
+=================
+Custom Queries
+==================
+
+=> We can write our own query and we can execute it using jpa
+
+=> To work with custom queries we will use @Query annotation
+
+	@Query("query-goes-here")
+	public Employee getEmps();
+
+=> Custom Queries are divided into 2 types
+
+		1) SQL Queries
+		2) HQL Queries
+
+// SQL queries will use table name and column names in the query
+	
+		select * from emp_tbl;
+
+		select * from emp_tbl where emp_id = 1;		
+
+// HQL queries will use Entity class name and variable names in the query
+
+		From Employee
+
+		From Employee where empId = 1
+
+// SQL queries can execute in db directley
+
+// HQL queries can't execute in db directley	
+
+Note: Every HQL query should be converted to SQL before execution.
+
+=> To convert HQL to SQL, Dialect classes are available.
+
+	Ex: OracleDialect, MySQLDialect, PostGresDialect....
+
+=> Sql queries are database dependent
+
+=> HQL queries are database independent	
+
+
+
+=> SQL queries will give best performance (quick execution)
+
+=> HQL queries will give better maintainence
+
+
+
+
+==============EmpRepository.java=========================================
+
+public interface EmployeeRepo extends CrudRepository<Employee, Integer> {
+
+	@Query("from Employee")
+	public List<Employee> getAllEmpRecords();
+
+	@Query("from Employee where empId = :id")
+	public Employee getEmpById(Integer id);
+
+	// select * from employee where emp_dept = :dept
+	public List<Employee> findByEmpDept(String dept);
+
+	// select * from employee where emp_gender = :gender
+	public List<Employee> findByEmpGender(String gender);
+
+	// select * from employee where emp_gender=:gender and emp_dept=:dept
+	public List<Employee> findByEmpGenderAndEmpDept(String gender, String dept);
+
+	// select * from employee where emp_salary >= : salary
+	public List<Employee> findByEmpSalaryGreaterThanEqual(float salary);
+
+}
+=======================================================
+@Service
+public class EmployeeService {
+
+	private EmployeeRepo empRepo;
+
+	public EmployeeService(EmployeeRepo empRepo) {
+		this.empRepo = empRepo;
+	}
+
+	public void getEmpById(Integer id) {
+		Employee empById = empRepo.getEmpById(id);
+		System.out.println(empById);
+	}
+
+	public void getAllEmpRecords() {
+		List<Employee> emps = empRepo.getAllEmpRecords();
+		emps.forEach(System.out::println);
+	}
+
+	public void getEmpsBySalary(float salary) {
+		List<Employee> emps = empRepo.findByEmpSalaryGreaterThanEqual(salary);
+		emps.forEach(System.out::println);
+	}
+
+	public void getEmpsByGenderAndDept(String gender, String dept) {
+		List<Employee> emps = empRepo.findByEmpGenderAndEmpDept(gender, dept);
+		emps.forEach(System.out::println);
+
+	}
+
+	public void getEmpsByGender(String gender) {
+		List<Employee> emps = empRepo.findByEmpGender(gender);
+		emps.forEach(System.out::println);
+	}
+
+	public void getEmpsByDept(String dept) {
+		List<Employee> emps = empRepo.findByEmpDept(dept);
+		emps.forEach(System.out::println);
+	}
+
+	public void getAllEmps() {
+		Iterable<Employee> findAll = empRepo.findAll();
+		findAll.forEach(System.out::println);
+	}
+
+	public void getEmps() {
+		List<Integer> empIds = Arrays.asList(102, 103);
+		Iterable<Employee> itr = empRepo.findAllById(empIds);
+		itr.forEach(System.out::println);
+	}
+
+	public void getEmp() {
+		Optional<Employee> findById = empRepo.findById(101);
+		if (findById.isPresent()) {
+			Employee employee = findById.get();
+			System.out.println(employee);
+		}
+	}
+
+	public void saveEmployee() {
+		Employee emp = new Employee();
+
+		emp.setEmpId(101);
+		emp.setEmpName("Charles");
+		emp.setEmpGender("Male");
+		emp.setEmpDept("Sales");
+		emp.setEmpSalary(18000.00);
+
+		empRepo.save(emp);
+	}
+
+	public void saveMultipleEmployees() {
+
+		Employee emp1 = new Employee();
+		emp1.setEmpId(102);
+		emp1.setEmpName("Kathy");
+		emp1.setEmpGender("Fe-Male");
+		emp1.setEmpDept("Sales");
+		emp1.setEmpSalary(19000.00);
+
+		Employee emp2 = new Employee();
+		emp2.setEmpId(103);
+		emp2.setEmpName("Nick");
+		emp2.setEmpGender("Male");
+		emp2.setEmpDept("Admin");
+		emp2.setEmpSalary(29000.00);
+
+		List<Employee> empsList = Arrays.asList(emp1, emp2);
+
+		empRepo.saveAll(empsList);
+
+	}
+}
+
+=============================================================
+
+SQL : select * from emp_tbl;
+HQL : From Employee;
+
+SQL : select * from emp_tbl where emp_id=:eid
+HQL : From Employee where empId = :eid
+
+SQL : select * from emp_tbl where emp_dept=:dept and emp_gender = :gender
+
+HQL : From Employee where empDept=:dept and empGender=:gender
+
+SQL : select emp_name, emp_dept from emp_tbl;
+HQL : select empName, empDept from Employee;
+
+SQL : delete from emp_tbl where emp_id=:eid
+HQL : delete from Employee where empId=:eid
+
+
+============================================================
+public interface EmployeeRepo extends CrudRepository<Employee, Integer> {
+
+	@Query("from Employee")
+	public List<Employee> getAllEmps();
+
+	@Query(value = "select * from employee", nativeQuery = true)
+	public List<Employee> getAllEmpRecords();
+
+	@Transactional
+	@Modifying
+	@Query("delete from Employee where empId=:eid")
+	public void deleteEmp(Integer eid);
+	
+}
+============================================================
+
+
+====================
+Today's Assignment
+====================
+
+1) Insert record using Custom Query in Data JPA
+
+2) Update record using custom query in data jpa
+
+3) Write a custom query to retrieve emp_name and emp_dept using Custom HQL query.
+
+
+
+
+
+1) Using jpa provided pre-defined methods we can peform Both select & non-select operations
+
+2) Using findBy methods we can perform select operations
+
+3) Using Custom Queries we can perform both select * non-select operations
+
+			-> For select operation tx not required
+
+			-> For non-select operation tx required
+
+			-> @Query, @Modifying & @Transactional		
+
+=======================================================
+
+1000 db tables			
+
+1000 DAO classes
+
+Every DAO 12 methods
+
+1000 * 12 => 12,000 methods
+
+Every method contains 6 lines of code
+
+12,000 * 6 lines = > 72,000 lines of code
+
+
+1) CrudRepository (12 methods)
+
+2) JpaRepository
+
+
+JpaRepository = CrudRepository + Sorting + Pagination + QBE
+
+Sorting : sort records in asc or desc order
+
+Pagination : divide records into multiple pages
+
+QBE : Query By Example
+
+		-> Used to construct query dynamically
+
+==========================================================
+
+public void getEmpsByQBE() {
+
+		Employee emp = new Employee();
+
+		// if user select dept then set dept value to entity
+
+		emp.setEmpDept("Marketing");
+		emp.setEmpGender("Male");
+		emp.setEmpName("Ruther");
+
+		Example<Employee> of = Example.of(emp);
+		List<Employee> findAll = empRepo.findAll(of);
+
+		findAll.forEach(e -> System.out.println(e));
+	}
+
+	public void getEmpsWithSort(String column) {
+		Sort sort = Sort.by(column).descending();
+		Iterable<Employee> findAll = empRepo.findAll(sort);
+		findAll.forEach(e -> System.out.println(e));
+	}
+
+	public void getEmpsWithPagination(int pageSize, int pageNo) {
+		PageRequest of = PageRequest.of(pageNo - 1, pageSize);
+		Page<Employee> findAll = empRepo.findAll(of);
+		List<Employee> content = findAll.getContent();
+		content.forEach(System.out::println);
+	}
+================================================================
+
+==============
+Timestamping
+==============
+
+contact_us_leads
+
+contact_id  PK
+name
+email
+phno
+msg
+created_date   =====> @CreationTimestamp
+updated_date  =====> @UpdateTimestamp
+
+1000 records available
+
+
+========================================================
+@Entity
+@Table(name = "contact_us_leads")
+public class ContactUsEntity {
+
+	@Id
+	private Integer cid;
+	private String cname;
+	private String cemail;
+	private String cphno;
+
+	@CreationTimestamp
+	@Column(name = "created_date", updatable = false)
+	private LocalDateTime createdDate;
+
+	@UpdateTimestamp
+	@Column(name = "updated_date", insertable = false)
+	private LocalDateTime updatedDate;
+
+=============================================================
+
+
+Primary key  : Constraint in database
+
+	=> It is used to maintain unique data in the column
+
+	Primary Key = Not null + Unique
+
+
+===========
+Generators
+===========
+
+=> Generators are used to generate the value for primary key column
+
+
+1) table   ===> will maintain seperate table for primary keys
+
+2) identity ===> supports mysql (auto_increment)
+
+3) sequence	===> supports oracle (sequence in db)
+
+4) UUID  => It supports alpha numeric values for primary key
+
+5) Auto => It picks generator based on underlying database
+
+
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer cid;
+
+=> Identity generator will use auto_increment to populate primary key column value
+
+=> sequence generator will use db sequence to populate primary key column value
+
+=> table generator will use seperate table to maintain primary column values.
+
+
+=> If we want to generate alphanumeric data for PK column then we can create our own generator (Custom Generator).
+
+#### Custom Generators: https://youtu.be/IijGVtT9ZPk?si=HVUBpNWCURHH8uYe
+
+
+
+TCS1
+TCS2
+TCS3
+.
+.
+.
+
+=====================
+Today's Assignment
+===================
+1) Insert record into table using custom query
+
+2) Write custom query with projection
+
+3) Custom Generator  using Oracle database
+
+4) Custom Generator using MySQL Database
+
+
+======================
+Composite Primary Key
+=======================
+
+More than one Primary Column in database
+
+
+// Table with one primary key column
+
+create table book (
+	book_id int,
+	book_name varchar,
+	book_price float,
+	author_name varchar,
+	primary key (book_id)
+)
+
+// Table with composite primary key columns
+
+create table book (
+	book_id int,
+	book_name varchar,
+	book_price float,
+	author_name varchar,
+	primary key (book_id,book_name)
+)
+
+Note: For composite primary keys we can't use generators.
+
+----------------------------------------------
+@Embeddable
+public class BookPk {
+
+	private Integer bookId;
+	private String bookName;
+
+}
+----------------------------------------------
+
+@Entity
+@Table(name = "BOOKS_INFO_TBL")
+public class Book {
+
+	private Double bookPrice;
+	private String authorName;
+
+	@EmbeddedId
+	private BookPk bookPk;
+
+}
+----------------------------------------------------------------
+public interface BookRepo extends JpaRepository<Book, BookPk>{
+
+}
+
+-----------------------------------------------------------------
+@Service
+public class BookService {
+	
+	@Autowired
+	private BookRepo repo;
+
+	public void saveBook() {
+		BookPk pk = new BookPk(102, "Java");
+		Book entity = new Book(1000.00, "James", pk);
+		repo.save(entity);
+		System.out.println("Record Saved...");
+	}
+	
+	public void getBook() {
+		
+		BookPk pk = new BookPk(101, "Java");
+		Optional<Book> findById = repo.findById(pk);
+		if(findById.isPresent()) {
+			System.out.println(findById.get());
+		}
+	}
+}
+----------------------------------------------------------
+@SpringBootApplication
+public class Application {
+
+	public static void main(String[] args) {
+		ConfigurableApplicationContext context = 
+				SpringApplication.run(Application.class, args);
+		
+		BookService service = context.getBean(BookService.class);
+		
+		//service.saveBook();
+		service.getBook();
+	}
+
+}
+----------------------------------------------------------
+
+
+
+
+1) @Component
+2) @Service
+3) @Repository
+4) @Configuration
+5) @Bean
+6) @Primary
+7) @Autowired
+8) @Qualifier
+9) @Scope
+10) @ComponentScan
+11) @SpringBootApplication
+12) @PostConstruct
+13) @PreDestroy
+
+
+
+=========================================
+How to work with Embedded Database (h2)
+==========================================
+
+=> External Database   (Ex : Oracle, MySQL, Mongo DB)
+
+=> Embedded Database   ( Ex: h2 )
+
+Note: Embedded database is used for temporary purpose.
+
+
+=> For POC (Proof of concept) development we can use h2
+
+======================================
+Spring Boot app with h2 db - example
+======================================
+
+1) create boot app with below dependencies
+
+			a) jpa-starter
+			b) h2
+			c) web-starter
+
+
+2) Configure h2 datasource properties in application.properties file
+
+spring.datasource.username=ashokit
+spring.datasource.password=ashokit
+spring.datasource.url=jdbc:h2:mem:test
+spring.datasource.driverClassName=org.h2.Driver
+
+spring.h2.console.enabled=true
+
+spring.jpa.show-sql=true 
+
+server.port=9090
+
+3) Create Entity class & repo interface
+
+4) Run the application and access h2-console
+
+		URL : http://localhost:port/h2-console
+
+
+
+==================
+Spring Profiles
+==================
+
+Application Environments
+
+=> Environements are used to test our application
+
+=> Environment : A platform to run our application
+
+Local Env : Where we will develop code & perform unit test
+
+DEV Env : developers will perform integration testing (DIT)
+
+SIT Env : System Integration Testing
+
+UAT Env : user acceptance testing (go or no-go)
+
+Prod Env : production environment (live)
+
+
+
+
+1) What is Environment
+
+2) Why we need environments
+
+3) Can you tell your project environments
+		 - dev
+		 - sit (QA)
+		 - uat
+		 - pilot
+		 - prod
+
+4) What are environment specific properties
+
+				- data source
+				- kafka properties
+				- redis properties
+				- payment gateway properties
+				- Third party apis endpoint urls
+
+
+Note: When we have multiple environments, we have to change above properties in application.properties file when we are deploying code to particular environment.	
+
+				- Time taking process
+				- Risky
+
+
+=> To avoid this problem, we can use Spring Profiles concept.	
+
+=> Spring Profiles are used to maintain environment specific properties
+
+
+Note: For every env we will create one profile with env specific configuration
+
+		application.properties  (default)
+
+		application-dev.properties
+
+		application-sit.properties
+
+		application-uat.properties
+
+		application-prod.properties
+
+
+
+Note: Which profile should be loaded we can configure in main properties file
+
+		spring.profiles.active=dev				
+
+================================================
+Q) How to activate spring profile in runtime ?
+================================================
+
+1) package app as jar file
+
+2) Run jar file with below command
+
+	$ java -Dspring.profiles.active=dev -jar <jar-file>
+
+
+================================================
+Q) How to rollback transaction in data jpa ?
+================================================
+
+=> Using @Transactional annotation we can rollback tx when some exception occured
+
+		ex: @Transactional(rollBackFor = Exception.class)
+
+---------------------------------------------------------------
+	@Transactional(rollbackFor = Exception.class)
+	public void saveData() {
+		
+		Emp emp = new Emp();
+		emp.setEname("Ashok");
+		emp.setEsal(35000.00);
+		
+		Emp savedEntity = empRepo.save(emp);
+		
+		int i = 10/0;
+		
+		Address addr = new Address();
+		addr.setCity("Hyd");
+		addr.setState("TG");
+		addr.setCountry("IN");
+		addr.setType("Present");
+		addr.setEmpId(savedEntity.getEid());
+		
+		addrRepo.save(addr);
+		
+	}
+
+
+=====================
+Today's Assignment
+=====================
+
+1) Insert record into table using custom query
+
+2) Write custom query with projection
+
+3) Custom Generator using Oracle database
+
+4) Custom Generator using MySQL Database
+
+5) Insert image into table using data jpa
+
+6) Call stored procedure using data jpa
+
+7) Export DB table data to excel file
+
+		Reference : youtube.com/watch?v=qe_NrRRsuVg
+
+8) How to connect with multiple databases using springboot
+
+		Reference : youtube.com/watch?v=mIFIb_JE47U
+
+9) Develop data jpa applicatio with profiles (dev & qa)
+
+			dev profile => h2 db
+
+			qa profile => mysql db
+
+
+10) Develop data jpa application to insert emp record with addresses (one emp can have multiple addresses like present and permanent)
+
+11) Develop data jpa application to retrieve emp record along with addresses using join query based on given emp id.
+
+
+
+1) What is ORM
+2) What is Entity
+3) What is Data jpa
+4) Jpa Repositories
+5) CrudRepository vs JpaRepository
+6) Sorting
+7) Pagination
+8) QBE
+9) findByXXX Methods
+10) Custom Queries
+11) SQL vs HQL
+12) Timestamping
+13) Primary Keys
+14) Composite Primary key
+15) Generators
+16) Custom Generator
+17) Embedded DB (h2)
+18) Profiles
+19) Tx Rollback
+20) Association Mapping (pending)
+
+
+
+1) @Entity
+2) @Table
+3) @Id
+4) @Column
+5) @GeneratedValue
+6) @GenericGenerator
+7) @CreationTimestamp
+8) @UpdateTimestamp
+9) @Embeddable
+10) @EmbeddedId
+11) @Transactional
+12) @Modifying
+13) @Lob
+14) @Query
+
+
+
+
+
+1) Spring Core
+2) Spring Boot
+3) Data JPA
+4) Web MVC

@@ -1,0 +1,648 @@
+
+================
+Spring Web MVC
+================
+1) What is Web MVC
+2) Spring MVC Architecture
+3) First Web App Development
+4) Embedded Servers
+5) Working with Jetty server
+6) Thymeleaf (UI)
+7) How to send data from controller to UI
+8) How to send data from UI to controller
+			 - Query Params
+			 - Path Params
+			 - Request Body
+			 - Response Body
+9) How to develop Thymeleaf forms 
+10) Form Bindings
+11) Exception Handling in MVC App
+12) CRUD Operations Project (BookStore App)
+13) Form Validations
+14) Email Sending
+15) Actuators in SpringBoot 
+
+
+================
+Spring Web MVC
+================
+
+=> It is one of the module in spring framework
+
+=> It is used to develop both web & distributed apps
+
+		Web app : C 2 B
+
+		Distributed App : B 2 B
+
+=> Spring Web MVC supports multiple presentation technologies
+
+			Ex : JSP and Thymleaf
+
+=> Web MVC supports form binding
+
+		form data <--------> java obj	
+
+
+=============================
+Spring Web MVC Architecture	
+=============================
+
+1) Dispatcher Servlet : Front Controller (pre & post - processing)
+
+2) Handler Mapper : To identify which controller should handle req
+
+3) Controller : Responsible to handle request & provide MAV as resp
+
+4) Model And View : model represents data & view represents UI page
+
+5) View Resolver : Identify where view files available in project
+
+6) View : Render (processing) model data on view page 
+
+------------------------------------------------------------------------
+
+web-starter : web app + rest apis + spring mvc + tomcat
+
+thymeleaf : presentation technology
+
+-----------------------------------------------------------------------
+
+1) Create boot app with below dependencies
+
+			a) web-starter
+			b) thymeleaf - starter
+
+2) Create Spring controller using @Controller annotation
+
+3) Create Controller method and bind it to get request using @GetMapping annotation			
+
+4) Create view page (html) under templates folder
+
+5) Add bootstrap config to html page
+
+
+@Controller
+@GetMapping
+@RequestMapping
+
+----------------------------------------------------------------
+
+
+
+
+1) Spring Boot
+2) Spring Web MVC
+3) Spring Data jpa
+
+=======================
+development procedure
+=======================
+
+1) create boot app with below dependencies
+
+		a) web-starter
+		b) jpa-starter
+		c) mysql-connector
+		d) thymeleaf-starter
+		e) devtools
+
+2) Create Entity & repository
+
+3) Create service interface & impl class
+
+4) Create controller with required method
+
+5) create view page with presentation logic
+
+6) configure data source properties in application.propeties file	
+
+
+-------------------------------------------------------------------
+@Entity
+public class Book {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer bookId; // book_id
+	private String bookName;
+	private Double bookPrice;
+
+	//setters & getters
+
+}
+-----------------------------------------------------------------------
+public interface BookRepository extends JpaRepository<Book, Integer>{
+
+}
+----------------------------------------------------------------------
+package in.ashokit.service;
+
+import java.util.List;
+
+import in.ashokit.entity.Book;
+
+public interface BookService {
+
+	public List<Book> getAllBooks();
+	
+	public boolean saveBook(Book book);
+
+}
+
+------------------------------------------------------------------
+
+@Service
+public class BookServiceImpl implements BookService {
+
+	@Autowired
+	private BookRepository bookRepo;
+
+	@Override
+	public List<Book> getAllBooks() {
+		return bookRepo.findAll();
+	}
+
+	@Override
+	public boolean saveBook(Book book) {
+		Book savedBook = bookRepo.save(book);
+		if (savedBook.getBookId() != null) {
+			return true;
+		}
+		return false;
+	}
+}
+
+-------------------------------------------------------------------
+package in.ashokit.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import in.ashokit.entity.Book;
+import in.ashokit.service.BookService;
+
+@Controller
+public class BookController {
+
+	@Autowired
+	private BookService service;
+
+	@GetMapping("/index")
+	public ModelAndView index() {
+		ModelAndView mav = new ModelAndView();
+
+		// sending empty obj for form binding
+		mav.addObject("book", new Book());
+
+		mav.setViewName("index");
+
+		return mav;
+	}
+
+	@PostMapping("/book")
+	public ModelAndView saveBook(Book book) {
+
+		ModelAndView mav = new ModelAndView();
+
+		boolean status = service.saveBook(book);
+		if (status) {
+			mav.addObject("succMsg", "Book Saved");
+		} else {
+			mav.addObject("errMsg", " Failed to save");
+		}
+
+		mav.setViewName("index");
+
+		return mav;
+	}
+
+	@GetMapping("/books")
+	public ModelAndView getBooks() {
+		ModelAndView mav = new ModelAndView();
+		List<Book> allBooks = service.getAllBooks();
+		mav.addObject("books", allBooks);
+		mav.setViewName("booksView");
+		return mav;
+	}
+}
+
+-------------------------------------------------------------------<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Ashok IT</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body>
+	<div class="container">
+
+		<h1>Books Info</h1>
+
+		<a href="index" class="btn btn-primary mb-3">Add New Book</a>
+
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>Book Id</th>
+					<th>Book Name</th>
+					<th>Book Price</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="b : ${books}">
+					<td th:text="${b.bookId}"></td>
+					<td th:text="${b.bookName}"></td>
+					<td th:text="${b.bookPrice}"></td>
+					<td>
+						<a href="#" class="btn btn-secondary">Edit</a>
+						<a href="#" class="btn btn-danger">Delete</a>
+					</td>
+				</tr>
+				<tr th:if="${books.isEmpty()}">
+					<td colspan="4">No Records Found</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>
+-------------------------------------------------------------------------
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Ashok IT</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body>
+	<div class="container">
+		<h2>Book Form</h2>
+
+		<p th:text="${succMsg}" style="color: forestgreen;"></p>
+		<p th:text="${errMsg}"></p>
+
+		<form th:action="@{/book}" th:object="${book}" method="post">
+
+			<table>
+				<tr>
+					<td>Book Name :</td>
+					<td> <input type="text" th:field="*{bookName}" required/> </td>
+				</tr>
+				<tr>
+					<td>Book Price :</td>
+					<td> <input type="number" th:field="*{bookPrice}" required/> </td>
+				</tr>
+				<tr>
+					<td></td>
+					<td> <input type="submit" value="Save" class="btn btn-primary"/> </td>
+				</tr>
+
+			</table>
+		</form>
+		
+		<a href="books">View All Books</a>
+
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>
+
+
+http://localhost:8080/delete?bookId=1
+
+
+
+Form data we will send using Request Body
+ (for sensitive data we will use form)
+
+ => To send data in request body we will use POST request
+
+
+Path param : https://www.youtube.com/watch?v=BNkgC-VHR90
+
+Path param : www.ashokitech.com/course?name=sbms
+
+Query Param: www.ashokitech.com/course/sbms
+
+
+============================
+Hard Delete Vs Soft Delete
+============================
+
+hard delete ===> permanent delete (we can't get it back)
+
+soft delete ===> Make record as in-active
+
+
+book_id
+book_name
+book_price
+active_sw   (Y or N)
+
+
+==================
+Query Parameters
+===================
+
+=> To send data from client to server in URL
+
+=> Represents data in key-value format
+
+=> Query Parameters will present at end of the URL
+
+=> Query Parameters will start with '?' and seperated by '&'
+
+		www.ashokit.in/course?name=sbms&trainer=ashok
+
+Note: To read query parameters from URL we are using @RequestParam annotation		
+
+==================
+Path Variables
+===================
+
+=> To send data from UI to server in URL
+
+=> Path Parameters can present anywhere in the URL
+
+=> Path Parameters will be represented using placeholder in URL pattern
+
+	www.ashokit.in/course/{cname}/trainer/{tname}
+
+=> To read path parameters we will use @PathVariable annotation
+
+
+==========================================
+Exception Handling in Spring Web MVC App
+==========================================
+
+In 2 ways we can implement exception handling
+
+1) Local exception handling (specific to only one controller)
+
+2) Global exception handling (Entire project)
+
+=> We if create a class like below then it will handle any type of exception occured in the application.
+
+Note: When exception occured errorView page will be displayed to client.
+
+
+@ControllerAdvice
+public class AppExceptionHandler {
+
+	@ExceptionHandler(value = Exception.class)
+	public String handleException(Exception e) {
+		System.out.println(e.getMessage());
+		return "errorView";
+	}
+
+}
+
+==================================================
+How to make Jetty as default embedded container
+===================================================
+
+=> In spring boot, we can use below 3 embedded conatiners
+
+1) tomcat  (default)
+2) jetty
+3) netty  (reactive programming - webflux)
+
+-> To change from tomcat to jetty we need to make below changes in pom.xml file
+
+Note: Exclude tomcat-starter from web-starter and add jetty starter like below
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jetty</artifactId>
+		</dependency>	
+
+--------------------------------------------------------
+
+@Controller
+@RequestMapping
+@GetMapping
+@PostMapping
+@RequestParam
+@PathVariable
+@ResponseBody
+@ControllerAdvice
+@ExceptionHandler
+
+
+-----------------------------
+Spring Web MVC App with JSP
+-----------------------------
+
+1) Create boot app with below dependencies
+
+		a) web-starter
+		b) devtools
+		c) tomcat-embed-jasper (get it from mvnrepo)
+
+Note: if we don't add tomcat-embed-jasper dependency then jsp will be downloaded in browser.		
+
+2) Configure View Resolver in application.properties file
+
+spring.mvc.view.prefix=/views/
+spring.mvc.view.suffix=.jsp
+
+3) Create Controller class with required methods
+
+@Controller
+public class MsgController {
+	
+	@GetMapping("/welcome")
+	public String getWelcomeMsg(Model model) {
+		model.addAttribute("msg", "Welcome to Spring Boot");
+		return "index";
+	}
+}
+
+4) Create view file under (webapp/views/index.jsp)
+
+  <body>
+    <h1>Hello, world!</h1>
+    ${msg}
+   </body>
+
+
+Note: if we create both index.html and index.jsp then it will load html page with highest priority.
+
+--------------------------
+Actuators in Spring Boot 
+--------------------------
+
+-> Actuators are used to get production ready features of our application
+
+-> Actuators will help us in monitoring and managing our application.
+
+			=> health of app
+
+			=> how many beans loaded
+
+			=> config props loaded
+
+			=> what url-patterns available
+
+			=> Thread dump of app
+
+			=> Heap dump of app
+
+
+-> To work with Actuators, we need to add below pom starter
+
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+
+-> By default, only health endpoint will be exposed
+
+-> We can use below URL to check what endpoints are exposed
+
+		URL: http://localhost:8080/actuator
+
+-> We can expose other endpoints using below property in application.properties file
+
+management.endpoints.web.exposure.include=*
+management.endpoints.web.exposure.exclude=beans
+
+management.endpoint.shutdown.enabled=true
+
+-> Shutdown is a special endpoint which is used to stop the server. It is mapped to POST request.
+
+Note: We can use postman tool to send POST request.
+
+
+#### SBMS Interview Questions & Answers : https://youtu.be/cZYJHIgmGaY?si=aljZQCaH36Yso2yA   ####
+
+
+
+ModelAndView - class
+
+Model - interface
+
+@ModelAttribute - annotation
+
+
+----------------------------
+application.properties file
+----------------------------
+
+-> By default this file will be created when we create boot application
+
+-> It is used to configure properties in the key value format
+
+Ex : 
+
+server.port=8081
+
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+
+Note: Readability is not good in properties file
+
+-> Properties file supported only in java.
+
+=> To overcome problems of properties file, boot supporting YML file
+
+---------------------
+application.yml file
+---------------------
+
+-> YML stands for YET Another Markup language
+
+-> Represents data in hierarchial format
+
+-> It will improve readability of our data
+
+-> YML files are universal (supported by multiple technologies)
+
+Note: In YML files, indentation is very very important.
+
+
+server:
+ port: 8081
+
+spring:
+  mvc:
+    view:
+      prefix: /views/
+      suffix: .jsp
+
+
+      1) Spring Basics
+
+      2) Spring Core Module
+
+      3) Spring Data JPA
+
+      4) Spring Web MVC
+
+
+
+---------------------
+Web MVC Assignments
+---------------------
+
+1) Develop web application using springboot + thymeleaf to display welcome msg to user in the browser.
+
+2) Develop web application using "web mvc + data jpa" to retrieve books data from mysql db and display books data in HTML page in table format.
+
+3) Develop Spring Web MVC application using Ajax call.
+
+Note: Take 2 numbers using form and when form is submitted update response in same page without reloading the page.
+
+4) Develop Web MVC form based application with form validations
+
+		Name : 
+		Email : 
+		Phno : 
+
+Note: Once form is submitted, send email to given email id with registration success msg.  
+
+5) Develop Student Registration Form with below fileds
+
+
+a) Name  (text field)
+b) Email (text field)
+c) Gender (radio button)
+d) Course (dropdown)
+e) Timings (checkboxes)
+
+Note: Course names and Timings should come from db tables.

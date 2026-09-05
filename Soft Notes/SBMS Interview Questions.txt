@@ -1,0 +1,430 @@
+1. What is Spring ?
+==> Spring is the framework which is used to create the web-applications and distributed applications.
+    It Provides the predefined API for Database operations,REST-API,Security etc.
+
+2. What are the fetures of spring ?
+==> The 3 Main features of spring are 
+    1. Dependency Injection  - If we want to inject the dependent object into target object then that is called dependency injection.
+    2. IOC Container  - IOC container is the principle which is used to colloborate the dependencies between the object.
+    3. Auto-Wiring   - Autowriring is the machenism by which we can achieve the dependency injection.
+
+
+3. What is dependency injection ? What are the types of deendency injection ?
+==> Dependency injection is machenism by which we can inject the dependent object into the target object.
+    There are mainly 3 types of dependency injection .
+
+    1. Field injection    - mechanism of injecting the dependent object into target object by using the target class field is called field injeciton. for this we use @Autowired
+    2. Constructor injection  - mechanism of injecting the dependent object into target object by using the target class constructor is called constructor injeciton.
+    3. Setter Injection  - mechanism of injecting the dependent object into target object by using the target class Setter method is called Setter injeciton.
+
+    Special Case :
+   
+    4. Circular Injection - If A class is dependent on B class bean and B class bean is dependent on A class bean then it is called circular injection .
+    5. Lookup Injection   - This usually occour in scopes . If two objects are connected and if the scope of 1st object is singleton & scope of 2nd object is prototype.
+
+
+4. What is spring configuraiton file ?
+==> It is the XML file which contains the configurations of the classes and it tells the IOC container that how our bean should be configured and linked with each other 
+
+   Example :
+   <bean id="stdobj" class="org.example.Student"></bean>
+
+
+5. What is a spring Bean ?
+==> Spring bean is a simple java object which is managed by the IOC container.
+
+6. What is the difference between the constructor injection and setter injection ?
+==> mechanism of injecting the dependent object into target object by using the target class constructor is called constructor injection.
+    mechanism of injecting the dependent object into target object by using the target class Setter method is called Setter injection.
+
+7. What are the bean scopes in the spring ?
+==> There are total 4 bean scopes 
+    1. Singleton   - container will create only one instance of the object.
+    2. prototype   - when ever required the container will create the new object.	
+    3. request     - This is related to web application it contains the all the necessary data from the browser itself and request parameters . It is created when the client request to the
+                     container if he gets the response the then object will be destroyed.
+    4. session     - If we want to maintain the user data from login to log-out this is called a session.
+
+
+    
+
+
+8. What is Autowiring in spring and what are the modes of autowiring ?
+==> Auto wiring is the mechanism by which we can perform dependency-injection automatically. in this the container will identify which is dependent object and will inject that object
+    to the target object.
+
+	Modes of Autowiring are :
+  	1. By Name        - Based on target bean variable name IOC will identify dependent bean and it will inject it.
+			    Note : target bean variable name should match with bean id. If it will not match then IOC will not perform DI.
+
+        2. By Type        - Based on the datatype of the variable it will perform the dependency injection .If the data-type is interface then if will check how may implementation
+                            class it has. If it has 2 implementation class then IOC will get confuse which bean needs to injected. it will get ambiguity issue. to resole this issue
+                            we will with 2 options :
+
+			   1. autowire-candidate = false
+                           2. primary = true
+
+
+	Note : By-Name & By-Type will use setter injection.
+ 
+        3. By Constructor - This is used to perform auto wiring by constructor.
+        4. no (default)  - This indicates hey container please don't do autowiring I will do manual wiring
+
+9. What is the difference between @Autowired and @Inject ?
+==> Both are used for same purpose . @Inject is the standard annotation while @Autowired is the spring specific annotation.
+
+10. What is the difference between @Component and @Bean ?
+
+==> If we want to represent our java class as a spring-bean class then we will go with @component annotation . It is class level annotation. 
+
+==> If we want to create a customized bean object and want IOC container to manage that object then we will go with @Bean annotation. It is method level annotation. 
+
+
+11. How many types of container are there in the spring ?
+
+==> Spring is having 2 Types of container
+    1. Bean-Factory   - It is like factory class which contains beans and on demand it will provide us bean object.
+    2. Application Context - It is a interface which is made on the top of Bean-Factory class and it provides some extra functionality Annotation-Support, Reactive Programming etc.
+
+12. What is the used of @Required Annotation 
+==> @Required is applied on the bean property setter method . It will force the bean object value must be populated.
+
+13. What is the use of @Qualifier Annotation is spring framework ?
+==> If we have created more then 1bean of same type then the container will be confused which bean needs to injected to resole this issue we will use @qualifier 
+
+14. What is the use of @Primary annotation ?
+==> If we have created more then one bean then the container will be confused which bean needs to injected to resolve this issue which bean should be preferred then in that case
+    we will se @Primary.
+
+15. What are the spring bean life-cycle methods ?
+==> These are the method which are executed from the bean creation to bean destruction .
+    If we use annotation then :
+    @Postconstruct - will be executed after the bean creation.
+    @PreDestroy    - will be executed before bean destruction.
+
+
+    If we implements the interface (Initialization bean & DisposableBean)
+   afterPropertiesSet()
+   destroy() 
+
+
+16. What are the common implementation for ApplicationContext ?
+==> FileSystemXMLApplicaitonContext
+    ClassPathXMLApplicatioContext
+    WebXmlApplicationContext
+
+
+17. What are the stereotype Annotation ?
+==> It they are annotated on the top of the class then that class be treated as spring bean.
+    1. @Component
+    2. @Service
+    3. @Repository
+    4. @Controller
+    5. @RestController
+
+18. What are the different modules in spring ?
+==> 1. Spring WEB-MVC
+    2. Spring APO
+    3. Spring Security
+    4. Spring Data-JPA
+    5. Spring Test Module
+    
+19. What are spring Profiles ?
+==> If we want to manage the environment specific configurations in spring boot then spring profiles come into picture.
+    Ex: we have my-sql db on dev env (user,password,port) will be different . now for QA (user,password,port) will be different. now will the user change the configuration file again 
+    & again . the ans is no .
+
+
+   we will create :
+   application-dev.properties
+   application-qa.properties
+
+   if we will use QA we will simply do spring.profiles.active=DEV or QA
+
+20. What is inner bean ?
+==> Whenever the bean is used for only one particular property it is advised to declared as inner bean.it support the setter injection property & constructor injection property.
+
+21. What is spring web-module ?
+==> If we want to create the web application or destributed application then we will use this module.
+
+22. What is MVC ?
+==> MVC stands for model view controller which is architectural design pattern .
+    where the model represent the entity or business logic while controller handles the request and view represent the provided information to the client (Ex JSP,Thymeaf,apache velocity   etc.)
+
+
+24. What is front controller in Spring?
+==> Front-Controller is also called dispacher servlet which will manage all the upcomming request .it is used for pre & post processing. 
+
+25. What is the flow of spring MVC ?
+==> Every Request will go to dispacher servlet --> Handler Mapper --> Controller ---> It will execute that request and create model & view Object --> View Resolver --> Display the content.
+
+26. What the annotations for the http request methods ?
+==> @GetMapping
+    @PostMapping
+    @PutMapping
+    @DeleteMapping
+    @PatchMapping
+
+27. What is the difference between @controller and @restcontroller ?
+==> If we want to create the web applications then we will go with @Controller. It Returns ModelAndView as response.
+    If we want to create destributed applications then we will go with @RestController. It Returns JSON Response. @RestController = (@Controller + @ResponseBody)
+
+28. What is @RequestBody & @ResponseBody ?
+==> @RequestBody annotation takes the incoming HTTP request body and automatically converts into Java Object
+    @ResponseBody it takes the return value of the method and converts into HTTP response format typically (JSON format )
+
+29. How can we map controller class & its methods with URL ?
+==> By using @RequestMapping
+
+30. What is the purpose of @PathVariable ?
+==> The @PathVariable is used to extract the data from the URL. Ex: http://localhost:8080/user/raman <-- this is pathvaribale
+
+   Ex: @GetMapping("/user/${name})
+       public void printName(@PathVaraible("name")){}
+    
+
+31. What do you understand by the validations in spring-boot ?
+==> It is used to restrict the value provided by the end user .
+    We need to add spring bean validator dependency 
+    Ex: @NotNull,@Pattern,@Email,@NotBlank etc
+
+   @Valid annotations must be used along with method parameter & requestbody
+
+32. Which annotations are used to defined the global exception handler class ?
+==> For web-applications @ControllerAdvice & for distributed applications  @RestControllerAdvice along with @ExceptionHandler.
+
+33. Explain some response status code ?
+==> 200 -- OK indicates success
+    400 -- Bad request input data is invalid
+    401 -- unauthorized login 
+    403 -- forbidden request user is not allowed to access that resource.
+    404 -- URL not found
+    405 -- method not found
+    500 -- internal server error.
+
+34. What is cross-origin concept in spring web ?
+==> Cross-Origin Resource sharing (CORS) is a security concept that allows restricting the resource access by the resource running in the web-browsers.
+    Ex: ReactJS application is trying to access Spring boot application.
+
+   @CrossOrigin(origins="http://localhost:8080")
+
+35. What is init-binder in spring web ?
+==> If the request is dispatched to the controller before it if I want to execute some pre-processing logic then we will use this annotation.
+    Ex: String Date is converted to Date-Object.
+
+36. What is the difference between the @PathVariable and @RequestParam annotation ?
+==> @RequestParam extract the data from query string.
+    @PathVariable extract the data from URI path.
+
+37. What is the purpose of view resolver ?
+==> The purpose of the view resolver is for checking weather the View of of type (JSP, Thymeleaf, Velocity) and present at which location .It will render the model data into that view.
+
+38. What is the purpose of model attribute ?
+==> If we want to bind the data which is coming from the client into the Java Object then we will use @ModelAttribute("obj-name")
+
+39. What is the difference between spring core and spring web-MVC ?
+==> Spring web MVC internally use spring core. 
+==> Spring Core has IOC container, Dependency Injection, Auto-Wiring features which is used by spring-mvc to create the loosely coupled web-applications.
+
+40. In How many ways we can read the data from the form ?
+==> By using the http request getParameter()
+    By using @RequestParam
+    By using @ModelAttribute
+
+
+41. What is ResponseEntity<T> in spring web ?
+==> If we want to send the status-code along with the response then we will use ResponseEntity<T>.
+
+42. Why @RequestHeader is used in spring web ?
+==> It is used to read Header-Parameter send by the client application.Ex: Authorization header,custom header etc.
+    @RequestHeader("Authorization") String key
+
+43. What is ORM ?
+==> ORM stands for Object Relation Mapping which will map our entity classes to data-base table.
+
+44. What is JPA ?
+==> JPA stands for Java Persistence API. It is one of the  ORM specification. It provides the relation between the Database and Java-Object.
+
+45. What is the difference between the JPA and Hibernate ?
+==> ORM is just a theory and JPA is the specification but the implementation is provided by the Vender called hibernate.
+
+46. What are advantage of JPA ?
+==> Data-base independent with the help of (dilect)
+    NO-SQL dependent.(JPQL/HQL)
+
+47. What is spring data or spring boot-data-jpa ?
+==> Spring Boot Data-JPA is used to develop the persistence layer of application with less-configuration.
+    it provides several interface it says to the user that please extend your class with this interface and we will provide the implementation during the RUN time(PROXY Class) .
+
+48. What is the difference between PagingAndSortingRepositary and JpaRepository?
+==> PagingAndSortingRepositary this is the parent interface of JpaRepository which provides the functionality like Sorting and Pagination.
+
+49. What are the predefined methods are given by Repository interfaces ?
+==> save() ,saveAll() ,delete() ,deleteAll() ,findById(),findAll()
+
+50. What is entity class ?
+==> If we want to map the java classes with database table name then that class is said as entity class.
+    for that we have an annotation @Entity(tablename="");
+
+51. What is PagingAndSortingRepositary ?
+==> This interface is given by data-jpa to sort the records by ascending or descending. we can convert the record and print page-by-page is called pagination.
+
+52. What is @Query used for ?
+==> If we want to generate the customized or user-defined query then we will use @Query annotations.
+
+53. How many types of query we can use by using @query ?
+==> 1. JPQL
+    2. Native Query
+    Note: if we are doing updating and deleting or creating the record then we will use @Transactional and @Modifying.
+
+54. Can you provide me the example of @Query using JPQL ?
+==> @Query(name="select e from Employee e where e.empName:empName);
+    public Employee getEmployee(String empName);
+
+55. What is PlatformTransactionManager ?
+==> It is the interface that extends transaction manager .It has a annotation called @Transactional which does commit in the case of success and rollback in the case of exception.
+
+56. What is the difference between findById() & getOne() ?
+==> FindById() is present in the crud repository while getOne() present in JPARepository()
+
+57. What is dialect ?
+==> It generates the SQL at runtime based on our operation .Like calling save() internally generate Insert SQL.
+
+58. What is fetch-type ?
+==> It is used for select type in association mapping.so it defines that if we are retrieving the parent record with it child record should be retrieve or not.
+    There are two types of fetch-type 
+
+	1. EAGER- It will fetch the parent data along with child data.
+	2. LAZY - It will only load the parent data but when we want the child data it will fire the query to load the child data. This can lead to N+1 problem.
+
+59. How can we resolve N+1 problem ?
+==> We can resolve N+1 problem by using JOINS.
+
+
+60. What is the difference between @Embadable and @EmbeddedId
+==> @Embadable is used for composite keys. It is written on the top of the class which contains the primary keys.
+    @EmbededId is used to refer the column which contains the primary keys. It is a field level annotation.
+
+61. What is spring security ?
+==> So spring security is the module which is used to provide Authentication & Authorization to our application. 
+    To use this we need to add spring-boot-starter-security dependency
+    To use and to enable security we need to add one annotation to our configuration  file which is @EanbleWebSecurity
+
+62. What are the features of Spring Security ?
+==> The features of spring security are :
+	1. Supports authentication and authorization in flexible manner.
+	2. For authentication and authorization it used JAAS service (java authentication and authorization service)
+	3. It also provide SSO sign-in feature which means by one-sign-in user can access the entire application.
+
+63. What is Authentication and Authorization ?
+==> Authentication means who can access our application and Authorization means who can access which part of our application (RBAC)
+
+64. What is Basic Authentication ?
+==> We send the username and password using the HTTP Authorization header to enable us to access the resource. username and password are encoded by using base-64 encoding in basic auth.
+
+65. What is spring-security context holder ?
+==> It is used to store the information about the current authenticated user. As a  helper class it provides the access to security context.
+
+66. What is spring Oauth 2.0 ?
+==> Oauth 2.0 is the way to access the protected resource using token instead of password either by letting them sign in through another provider like google , github etc.
+    suppose i want to signin by using github . 
+	1. Create a boot application with dependency (starter-web,spring-security,auth2.0 client)
+	2. create a auth-app in the gihub and copy the client id and client secreat id. It will tell that our applicaiton is registed with github server.
+	3. we need to configure the application-props  and provide the client & secreat id.
+	5. start the applicaiton and click on /login URL a github popup will be open and want you to login with it.
+
+67. What is hashing in spring security ?
+==> Generally user data (ex: password will directly stored in database is not a good option) to store the password we need some encryption mechanism (Ex: bcrypt) which will encoad our password which using some hashing alogorithem like (SHA,SHA256,MD5,MD4)
+
+68. Name security annotation used in SPEL ?
+==> @PreAuthorize,@PreFilter,@PostAuthorize,@PostFilter
+
+69. What is AuthenticationManager ?
+==> Authentication manager is a interface with will take the reference of authentication provider and it will validate weather the user is a valid user or not.If the user is authenticate
+    it will return true else it will throw AuthenticationException.
+
+70. What are the most-commonly used filter in spring-security ?
+==> Spring SecurityFilterChain() is the most commonly used in spring-security.It can handle more complex logis.
+
+71. What is JWT and how to implement JWT ?
+==> JWT stands for JSOn web-token . The token itself consist of 3 parts (header,payload,signature).Will tell verbally the full flow.
+
+72. What is difference between monolithic and microservice architecture ?
+==> In Monolithic architecture all the features are developed in the single application while in microservice it is a independent deployable and executable service .
+
+73. What are the benifits of microservice architecture ?
+==> 1. Scalablity 
+    2. Maintainablity
+    3. No-Single Point of failure
+    4. Loosly Coupling application
+    5. Depending of the requriments each services and be developed using different technology.
+
+74. What is solid principle ?
+==> S - Single Responsiblity principle
+    O - Open & Closed principle
+    L - Liskov principle
+    I - Interface Segrigation principle
+    D - Dependency Inversion principle
+
+75. What is spring cloud what are its feature ?
+==> Spring cloud is framework which is build on the top of spring-boot-framework
+    It is used for development & deployment of microservices
+    Key features (API - Gateway, Admin-Server, Eureka-Server,Circuit-Breaker,Zipkin Server
+
+76. What is service discovery and how can we achieve it ?
+==> So service descovery is also known as eureka server which is used to manage and moniter the health of our appkication.
+    whenever the application is started and is and annotated with @EnableEurekaClient will automatically register itself with eureka server running on port 8761
+    after every 30 seconds if will check weather the application is alive of not if the applicaiton is dead it will remove that application from its log.
+
+78. What is API Gateway ?
+==> It act as a single entry point for all the request comming from the client to the microservices
+    It has 2 features Filters and Routers which help us in dynamic routing and load-balancing
+    It also support the integration with Discovery-Server and Authentication Services.
+
+79. What is circuit-breaking how it is implement in spring cloud?
+==> Circuit Breaker is the design pattern which is used to develop the fault-tollerence application when there is cascading failures.
+    It is implemented using Resillence4J.
+    It something got failed it will not send the request to that microservice and it will execute the fall-back logic
+    It has 3 states 
+	1. Open     - Something got break and fallback method is executing until the time congured in applicaiton.props.
+	2. Closed   - Every thing is working fine as expected.
+	3. Half-Open- In the half open state if will do trials on the service and will check the service is responding or not as per-the configuration.If the service will not respond
+                      It will go to open state.
+    
+
+80. What is loadbalancing and how it is handled in the microservices ?
+==> Loadbalancing is the process of distributing the traffic to multiple instances of the application.we can achive loadbalancing with the help of feign-client which is client side loadbalancing so with the help of ribbon-concept feign client support load balancing.
+
+81. What are the tools used to aggregate microservices logs ?
+==> ELK (Elasticsearch,Logstach,Kibana) 	
+	
+82. What is destributed tracing and how we can achieve ?
+==> Distributed tracing is the porcess of tracking each and every request flowing through the microservices.In what order they are executed and how much time it is taking .
+we can achive by using Zipkin Server.
+
+83. What is the purpose of spring cloud configuration ?
+==> It is used for providing the loose coupling between the applicaiton and applicaiton.properties.we can achieve it via Config-Server where the application.props is deployed into the 
+    github and when-ever our microserver will be boot-up it will pull the configurations from github to our application.
+
+84. What are the differnce approaches for interservice-communicaiton ?
+==> There are 2types of communication 
+	1. Async
+	2. Sync 
+	
+	There are 3 types of approach
+	1. Rest-Template
+	2. Web-Client
+	3. Feign Client
+
+85. Explain the concept of Event Driven Architecture ?
+==> It is used for interservice communication async. 
+    It can be implemented by using Apache-Kafka, Rabbit MQ,
+    It uses the concept of Pub & Sub model 
+
+86. How Spring Boot Autoconfigure itself ?
+==> @SpringBootApplicaiton internally consist of 3 annotation
+	1. @Configuraiton 	- It is used to represent our java classes as spring bean configuration class.
+	2. @ComponentScan	- It is used to identify all the bean classes present in our project. It will scan the base-package & base package sub-package.
+	3. @EnableAutoConfiguration - 	When Ever the spring boot application will be started all the classes present in the Autoconfiguration.import file will be loaded then 
+					based on the conditional check @ConditionalOnClass it will identify which ever class bean need to created from the class path 
+					based on the POM starters.

@@ -1,0 +1,246 @@
+🔥 Core Java & JVM
+
+1. How does HashMap work internally in Java 8?
+2. What happens when hash collisions occur?
+3. equals() and hashCode() contract.
+4. ConcurrentHashMap internals.
+5. Fail-Fast vs Fail-Safe iterators.
+6. String Pool and String Interning.
+7. Why is String immutable?
+8. Heap vs Stack Memory.
+9. JVM Memory Model.
+10. ClassLoader hierarchy.
+11. Young Gen, Old Gen & Metaspace.
+12. Minor GC vs Major GC vs Full GC.
+13. G1 GC vs Parallel GC.
+14. OutOfMemoryError troubleshooting.
+15. Memory Leak identification techniques.
+16. Reflection API use cases.
+17. Comparable vs Comparator.
+18. Deep Copy vs Shallow Copy.
+19. Immutable Object design.
+20. Java 17 & Java 21 features.
+
+🔥 Multithreading & Concurrency
+
+21. synchronized vs volatile.
+22. Race Condition.
+23. Deadlock detection and prevention.
+24. Starvation and Livelock.
+25. ExecutorService internals.
+26. Fixed vs Cached Thread Pool.
+27. Future vs CompletableFuture.
+28. Callable vs Runnable.
+29. BlockingQueue implementation.
+30. Producer Consumer Problem.
+31. CountDownLatch vs CyclicBarrier.
+32. Atomic Classes.
+33. ThreadLocal use cases.
+34. ForkJoinPool.
+35. Thread-safe Singleton design.
+36. ConcurrentModificationException.
+37. ReadWriteLock.
+38. ReentrantLock.
+39. Parallel Streams internals.
+40. CompletableFuture chaining.
+
+🔥 Java 8 Coding & Collections
+
+41. Find 2nd Highest Salary.
+42. Find Nth Highest Salary.
+43. Highest Salary by Department.
+44. Find Duplicate Elements.
+45. First Non-Repeating Character.
+46. Count Character Frequency.
+47. Group Employees by Department.
+48. Convert List to Map.
+49. map() vs flatMap().
+50. Stream Lazy Evaluation.
+51. Collectors.groupingBy().
+52. Find Common Elements Between Lists.
+53. Reverse String using Streams.
+54. Reverse Words in Sentence.
+55. Longest Substring Without Repeating Characters.
+56. LRU Cache Design.
+57. Remove Duplicates using Streams.
+58. Sort Employees by Multiple Fields.
+59. Partitioning vs Grouping.
+60. Custom Collector implementation.
+
+🔥 Spring Boot
+
+61. What happens when Spring Boot starts?
+62. Auto Configuration Internals.
+63. Bean Lifecycle.
+64. Constructor Injection vs Field Injection.
+65. @Component vs @Service vs @Repository.
+66. @Qualifier vs @Primary.
+67. Filter vs Interceptor.
+68. Spring Bean Scopes.
+69. Spring Profiles.
+70. Spring Boot Actuator.
+71. Global Exception Handling.
+72. Validation using @Valid.
+73. Spring AOP use cases.
+74. @Transactional internals.
+75. Transaction Propagation Types.
+
+🔥 JPA & Hibernate
+
+76. Hibernate Entity Lifecycle States.
+77. Lazy Loading vs Eager Loading.
+78. LazyInitializationException.
+79. N+1 Query Problem.
+80. First-Level vs Second-Level Cache.
+81. JPQL vs Native Query.
+82. Criteria API vs JPQL.
+83. CascadeType.ALL vs orphanRemoval.
+84. Optimistic vs Pessimistic Locking.
+85. Pagination and Sorting in JPA.
+86. EntityGraph use cases.
+87. Batch Processing in Hibernate.
+88. Dirty Checking.
+89. Fetch Join.
+90. Hibernate Performance Optimization.
+
+🔥 Microservices
+
+91. Monolith vs Microservices.
+92. Challenges in Microservices Architecture.
+93. API Gateway responsibilities.
+94. Service Discovery using Eureka.
+95. Centralized Configuration.
+96. Feign vs RestTemplate vs WebClient.
+97. Circuit Breaker Pattern.
+98. Retry and Fallback Mechanisms.
+99. Distributed Tracing.
+100. Observability in Microservices.
+101. Saga Pattern.
+102. Choreography vs Orchestration.
+103. Idempotency implementation.
+104. Handling Duplicate Requests.
+105. Distributed Transactions.
+106. API Versioning.
+107. Rate Limiting.
+108. Resilience4j implementation.
+109. Secure Inter-Service Communication.
+110. Production Challenges in Microservices.
+
+🔥 Kafka
+
+111. Kafka Architecture.
+112. Topic, Partition & Offset.
+113. Producer Acks configuration.
+114. Consumer Groups.
+115. Rebalancing Process.
+116. Message Ordering.
+117. Replication Factor.
+118. ISR (In-Sync Replicas).
+119. At-most-once vs At-least-once vs Exactly-once.
+120. Idempotent Producer.
+121. Retry Topics.
+122. Dead Letter Queue.
+123. Consumer Lag.
+124. Kafka Streams.
+125. ZooKeeper vs KRaft.
+
+🔥 SQL & Database
+
+126. ACID Properties.
+127. Normalization vs Denormalization.
+128. Clustered vs Non-Clustered Index.
+129. Composite Index.
+130. Query Execution Plan.
+131. How Indexes Improve Performance.
+132. SQL Joins (All Types).
+133. WHERE vs HAVING.
+134. Window Functions.
+135. CTE vs Subquery.
+136. Find Nth Highest Salary.
+137. Find Duplicate Records.
+138. Pagination Queries.
+139. Database Locking.
+140. Optimizing Slow Queries.
+
+🔥 Security, Cloud & System Design
+
+141. JWT Authentication Flow.
+142. OAuth2 vs JWT.
+143. CORS vs CSRF.
+144. Session vs Token-Based Authentication.
+145. Docker Image Optimization.
+146. Kubernetes Pod vs Deployment.
+147. Readiness vs Liveness Probe.
+148. Designing a URL Shortener.
+149. Designing a Notification Service.
+150. Most Challenging Production Issue You Have Solved.
+
+
+🔥 Core AWS
+
+1. What are the core AWS services commonly used in Java applications?
+2. EC2 vs ECS vs EKS vs Lambda?
+3. When would you choose Lambda over EC2?
+4. How do you deploy a Spring Boot application on AWS?
+5. What is Elastic Beanstalk, and when would you use it?
+6. What is the difference between ECS and EKS?
+7. How does AWS Auto Scaling work?
+8. ALB vs NLB?
+9. What is an Auto Scaling Group (ASG)?
+10. How do you achieve High Availability in AWS?
+
+🔥 Storage
+
+11. S3 vs EBS vs EFS?
+12. How does Amazon S3 achieve 99.999999999% durability?
+13. What are S3 Storage Classes?
+14. How do you upload large files to S3?
+15. What is a Pre-Signed URL?
+
+🔥 Database
+
+16. RDS vs Aurora vs DynamoDB?
+17. SQL vs DynamoDB – when would you choose each?
+18. How does DynamoDB partition data?
+19. What are Global Secondary Indexes (GSI)?
+20. How do you improve DynamoDB performance?
+
+🔥 Messaging
+
+21. SQS vs SNS?
+22. Standard Queue vs FIFO Queue?
+23. What is Amazon EventBridge?
+24. When would you use Amazon MQ instead of SQS?
+25. How do you process asynchronous events in AWS?
+
+🔥 Security
+
+26. IAM Role vs IAM User?
+27. What are Security Groups?
+28. Security Group vs Network ACL?
+29. How do you manage secrets securely in AWS?
+30. How do you secure APIs using AWS services?
+
+🔥 Monitoring
+
+31. What is Amazon CloudWatch?
+32. How do you monitor a Spring Boot application on AWS?
+33. What production metrics do you monitor?
+34. How do you troubleshoot high CPU usage?
+35. How do you investigate application failures?
+
+🔥 Microservices
+
+36. How do microservices communicate in AWS?
+37. How would you deploy Kubernetes on AWS?
+38. What is AWS App Mesh?
+39. How do you implement service discovery?
+40. How do you design a fault-tolerant AWS architecture?
+
+🔥 Real-World Scenarios
+
+41. Your Spring Boot application suddenly becomes slow. How would you investigate?
+42. How would you design an application to handle 1 million requests per minute?
+43. How do you reduce AWS infrastructure costs?
+44. What is your disaster recovery strategy?
+45. How would you migrate an on-premise Java application to AWS?
