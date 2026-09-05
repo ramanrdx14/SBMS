@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Ticket Booking</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        h5 {
+            text-align: center;
+            color: green;
+        }
+
+        .link-box {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .link-box a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Train Ticket Booking</h2>
+
+    <!-- Success Message -->
+    <h5 th:if="${status != null}" th:text="${status}"></h5>
+
+    <!-- Show All Tickets Link -->
+    <div class="link-box" th:if="${status != null}">
+        <a th:href="@{/all}">Show All Tickets</a>
+    </div>
+
+    <!-- Booking Form -->
+    <form th:action="@{/bookticket}"
+          th:method="post"
+          th:object="${passenger}">
+
+        <input type="text"
+               placeholder="Enter Name"
+               required
+               th:field="*{name}">
+
+        <input type="email"
+               placeholder="Enter Email"
+               required
+               th:field="*{email}">
+
+        <input type="text"
+               placeholder="From Station"
+               required
+               th:field="*{from}">
+
+        <input type="text"
+               placeholder="To Station"
+               required
+               th:field="*{to}">
+
+        <input type="date"
+               required
+               th:field="*{doj}">
+
+        <input type="text"
+               placeholder="Train Number"
+               required
+               th:field="*{trainNo}">
+
+        <button type="submit">
+            Book Now
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

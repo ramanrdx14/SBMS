@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            padding: 30px;
+        }
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        thead{
+            background-color: #2563eb;
+            color: white;
+        }
+
+        th, td{
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tbody tr:nth-child(even){
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover{
+            background-color: #eef4ff;
+            transition: 0.3s;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<table>
+    <thead>
+    <tr>
+        <th>Ticket No.</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>From</th>
+        <th>To</th>
+        <th>DOJ</th>
+        <th>Train No</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="t : ${ticketlist}">
+        <td th:text="${t.ticketNo}"></td>
+        <td th:text="${t.name}"></td>
+        <td th:text="${t.email}"></td>
+        <td th:text="${t.from}"></td>
+        <td th:text="${t.to}"></td>
+        <td th:text="${t.doj}"></td>
+        <td th:text="${t.trainNo}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
