@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Show Books</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container">
+    <h1 class="">Books Info</h1>
+    <a href="/book/add" class="btn btn-success p-2 mb-5" type="button">Add Book</a>
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr class="table-primary">
+            <th scope="col">Book Id</th>
+            <th scope="col">Book Name</th>
+            <th scope="col">Book Price</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="b : ${book}">
+            <td th:text="${b.bookId}"></td>
+            <td th:text="${b.bookName}"></td>
+            <td th:text="${b.bookPrice}"></td>
+            <td>
+                <a class="btn btn-warning" type="button" th:href="@{/book/edit?(bookId=${b.bookId})}">Edit</a>
+                <a th:href="@{/book/deletebook?(bookId=${b.bookId})}"  class="btn btn-danger"  type="button" onclick="return confirmDelete()">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script>
+    function confirmDelete(){
+        return confirm("Are you sure want to delete ?");
+    }
+</script>
+</body>
+</html>
