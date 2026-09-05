@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="dc" class="org.example.DebitCardPayment" scope="prototype"></bean>
+
+    <bean id="cc" class="org.example.CreditCard"></bean>
+
+    <bean id="sp" class="org.example.SodexoPayment"></bean>
+
+    <bean id="pp" class="org.example.PaymentProcessor">
+<!--        <property name="payment" ref="cc"></property>-->
+        <constructor-arg name="payment" ref="sp"></constructor-arg>
+    </bean>
+
+
+</beans>
